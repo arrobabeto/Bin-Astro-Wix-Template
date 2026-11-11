@@ -1,0 +1,52 @@
+---
+import { site } from "../../config/site"
+import { resolvePublicUrl } from "../../lib/public-url"
+
+interface Props {
+  title: string
+  description: string
+}
+
+const { title, description } = Astro.props
+const canonical = resolvePublicUrl({
+  forwardedUrl: Astro.request.headers.get("x-wix-forwarded-url"),
+  siteUrl: site.url,
+  pathname: Astro.url.pathname,
+})
+const image =
+  site.ogImage === ""
+    ? ""
+    : /^https?:\/\//i.test(site.ogImage)
+      ? site.ogImage
+      : canonical
+        ? new URL(site.ogImage, canonical).href
+        : site.url
+          ? new URL(site.ogImage, site.url).href
+          : site.ogImage
+const publishJsonLd =
+  site.name !== "Sitio nuevo" && site.description !== "Descripción pendiente"
+const jsonLd = publishJsonLd
+  ? {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: site.name,
+      description: site.description,
+      ...(site.url ? { url: site.url } : {}),
+    }
+  : null
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+{canonical && <link rel="canonical" href={canonical} />}
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+{canonical && <meta property="og:url" content={canonical} />}
+<meta property="og:type" content="website" />
+{image && <meta property="og:image" content={image} />}
+{jsonLd && (
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+)}

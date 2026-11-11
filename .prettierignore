@@ -1,0 +1,11 @@
+dist/
+.astro/
+.wix/
+.wrangler/
+node_modules/
+coverage/
+package-lock.json
+src/wix/
+skills/wix-headless-kit/
+skills/wix-docs/
+skills/wix-manage/

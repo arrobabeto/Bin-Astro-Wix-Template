@@ -1,0 +1,22 @@
+---
+import BaseHead from "../components/seo/BaseHead.astro"
+import { site } from "../config/site"
+import "../styles/global.css"
+
+interface Props {
+  title: string
+  description: string
+}
+
+const { title, description } = Astro.props
+---
+
+<html lang={site.locale}>
+  <head>
+    <BaseHead title={title} description={description} />
+    <slot name="head" />
+  </head>
+  <body class="bg-background text-ink antialiased">
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,14 @@
+---
+import privacidad from "../../content/legal/privacidad.md?raw"
+import BaseLayout from "../../layouts/BaseLayout.astro"
+import { renderLegalMarkdown } from "../../lib/legal-markdown"
+
+const html = renderLegalMarkdown(privacidad)
+---
+
+<BaseLayout
+  title="Privacidad"
+  description="Aviso de privacidad. El texto de ejemplo todavía no es el del sitio."
+>
+  <main class="mx-auto max-w-3xl px-6 py-16" set:html={html} />
+</BaseLayout>

@@ -1,0 +1,37 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: Release
+    if: hashFiles('wix.config.json') != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Comprobar WIX_API_KEY
+        env:
+          WIX_API_KEY: ${{ secrets.WIX_API_KEY }}
+        run: |
+          if [ -z "$WIX_API_KEY" ]; then
+            echo "Falta el secreto WIX_API_KEY. No uses WIX_CLIENT_SECRET. Cómo crearlo: docs/guias/publicar.md"
+            exit 1
+          fi
+      - name: Login
+        env:
+          WIX_API_KEY: ${{ secrets.WIX_API_KEY }}
+        run: npx @wix/cli@latest login --api-key "$WIX_API_KEY"
+      - run: npx @wix/cli@latest env pull
+      - run: npx @wix/cli@latest build
+      - run: npx @wix/cli@latest release --comment "ci ${GITHUB_SHA}"

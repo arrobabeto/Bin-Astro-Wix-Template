@@ -1,0 +1,7 @@
+---
+description: El código de src/wix lo trajo el kit. No se reescribe.
+globs: src/wix/**
+alwaysApply: false
+---
+
+Este código lo trajo el kit. No lo reformatees ni lo reescribas. Si falta una operación, léelo junto con `wix-docs` en esa sesión y extiende en un archivo nuevo.

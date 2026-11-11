@@ -1,0 +1,14 @@
+---
+import terminos from "../../content/legal/terminos.md?raw"
+import BaseLayout from "../../layouts/BaseLayout.astro"
+import { renderLegalMarkdown } from "../../lib/legal-markdown"
+
+const html = renderLegalMarkdown(terminos)
+---
+
+<BaseLayout
+  title="Términos"
+  description="Términos de uso. El texto de ejemplo todavía no es el del sitio."
+>
+  <main class="mx-auto max-w-3xl px-6 py-16" set:html={html} />
+</BaseLayout>

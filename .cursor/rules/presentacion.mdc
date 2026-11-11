@@ -1,0 +1,7 @@
+---
+description: Presentación en Astro y Tailwind, sin catálogo paralelo.
+globs: src/pages/**,src/components/**,src/layouts/**
+alwaysApply: false
+---
+
+Tailwind con los tokens de `src/styles/global.css`. Sin hex suelto. Sin fetch directo a `wixapis.com`. Los datos de Wix entran por funciones de `src/wix` llamadas desde el frontmatter. Una isla de React solo cuando el componente shipped la exige o el estado es del visitante.
