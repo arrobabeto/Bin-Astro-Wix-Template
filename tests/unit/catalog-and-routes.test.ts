@@ -7,7 +7,7 @@ import { pageFileForRoute, routes } from "../../src/config/routes"
 import { findParallelCatalog } from "../../scripts/check-parallel-catalog.mjs"
 
 describe("routes", () => {
-  it("cada ruta registrada tiene una página", () => {
+  it("each registered route has a page", () => {
     for (const route of routes) {
       expect(existsSync(pageFileForRoute(route.path)), route.path).toBe(true)
     }
@@ -15,7 +15,7 @@ describe("routes", () => {
 })
 
 describe("findParallelCatalog", () => {
-  it("detecta un array de objetos que importa el data layer", () => {
+  it("detects an object array that imports the data layer", () => {
     const root = mkdtempSync(path.join(tmpdir(), "bawt-catalog-"))
     const dir = path.join(root, "src/lib")
     mkdirSync(dir, { recursive: true })
@@ -31,7 +31,7 @@ export const cities = [
     expect(findParallelCatalog(root)).toEqual(["src/lib/cities.ts"])
   })
 
-  it("permite un array que no importa Wix", () => {
+  it("allows an array that does not import Wix", () => {
     const root = mkdtempSync(path.join(tmpdir(), "bawt-catalog-"))
     const dir = path.join(root, "src/lib")
     mkdirSync(dir, { recursive: true })

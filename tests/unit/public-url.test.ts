@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest"
 import { resolvePublicUrl } from "../../src/lib/public-url"
 
 describe("resolvePublicUrl", () => {
-  it("usa x-wix-forwarded-url cuando es http(s)", () => {
+  it("uses x-wix-forwarded-url when it is http(s)", () => {
     expect(
       resolvePublicUrl({
         forwardedUrl: "https://preview.example/ruta",
@@ -13,7 +13,7 @@ describe("resolvePublicUrl", () => {
     ).toBe("https://preview.example/ruta")
   })
 
-  it("acepta http", () => {
+  it("accepts http", () => {
     expect(
       resolvePublicUrl({
         forwardedUrl: "http://preview.example/",
@@ -23,7 +23,7 @@ describe("resolvePublicUrl", () => {
     ).toBe("http://preview.example/")
   })
 
-  it("ignora un esquema que no es http(s) y arma la URL pública", () => {
+  it("ignores a scheme that is not http(s) and builds the public URL", () => {
     expect(
       resolvePublicUrl({
         forwardedUrl: "javascript:alert(1)",
@@ -33,7 +33,7 @@ describe("resolvePublicUrl", () => {
     ).toBe("https://publico.example/legal/privacidad")
   })
 
-  it("no duplica la barra entre el origen y la ruta", () => {
+  it("does not duplicate the slash between the origin and the path", () => {
     expect(
       resolvePublicUrl({
         forwardedUrl: "   ",
@@ -43,7 +43,7 @@ describe("resolvePublicUrl", () => {
     ).toBe("https://publico.example/legal/terminos")
   })
 
-  it("agrega la barra si la ruta no la trae", () => {
+  it("adds the slash when the path does not include it", () => {
     expect(
       resolvePublicUrl({
         forwardedUrl: null,
@@ -53,7 +53,7 @@ describe("resolvePublicUrl", () => {
     ).toBe("https://publico.example/aviso")
   })
 
-  it("no emite canonical si no hay URL pública ni forwarded http(s)", () => {
+  it("does not emit a canonical when there is no public URL and no forwarded http(s)", () => {
     expect(
       resolvePublicUrl({
         forwardedUrl: undefined,

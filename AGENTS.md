@@ -47,6 +47,8 @@ Do not work from memory on the Wix API. Not a path, not a header, not a field, n
 
 Shipped code is copied and not rewritten. `src/wix/sdk.ts` is the only seam. `WIX_CLIENT_ID` stays `null`: auth is ambient. A privileged operation does not go into an island. Do not use `auth.elevate`.
 
+Presentation does not call `wixapis.com` directly. Wix data comes through functions in `src/wix`, called from the frontmatter.
+
 The release is `wix build` and then `wix release`. The `wix dev` server does not count as publishing. `astro dev` is not the path: it has neither ambient auth nor the proxy.
 
 Feedback to Wix is sent only if the person says yes. The procedure is in [skills/wix-headless-kit/guides/feedback.md](skills/wix-headless-kit/guides/feedback.md).

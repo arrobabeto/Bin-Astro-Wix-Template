@@ -118,8 +118,8 @@ Statuses: **stable** (the procedure for this version), **third-party** (from Wix
 - **When not to use it:** for a cookie banner. There is no measurement in v1.
 - **Inputs:** legal name, address, email, and what data the site collects.
 - **Outputs:** `src/content/legal/privacidad.md` and `src/content/legal/terminos.md`.
-- **Requirements:** for Mexico, `skills/legal-text/references/mexico.md`. For another country, do not draft statutes from memory.
-- **Origin:** own to the template. The Mexico reference comes from Bin Astro Template.
+- **Requirements:** do not draft statutes from memory. There is no statute note in the repo.
+- **Origin:** own to the template.
 - **Status:** stable · v1 · 2026-11-11.
 
 ### `wix-headless-kit`

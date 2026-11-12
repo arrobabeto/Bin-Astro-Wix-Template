@@ -48,7 +48,7 @@ export default [
         {
           selector: "Literal[value=/#(?:[0-9a-fA-F]{3,4}){1,2}/]",
           message:
-            "Color escrito a mano. Usa un token de src/styles/global.css.",
+            "Hand-written color. Use a token from src/styles/global.css.",
         },
       ],
     },
