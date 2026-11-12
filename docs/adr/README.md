@@ -1,18 +1,20 @@
-# Decisiones de arquitectura (ADR)
+# Architecture decisions (ADR)
 
-Cada ADR registra una decisión: contexto, decisión, alternativas y consecuencias. No se borra. Si una decisión cambia, se escribe otra que la reemplaza.
+Each ADR records a decision: context, decision, alternatives, and consequences. They are not deleted. If a decision changes, another ADR replaces it.
 
-| ADR                                      | Decisión                                   | Estado   |
-| ---------------------------------------- | ------------------------------------------ | -------- |
-| [0001](0001-contenido-en-wix.md)         | El contenido de negocio vive en Wix        | Aceptada |
-| [0002](0002-astro-gestionado-por-wix.md) | Astro gestionado por Wix, en servidor      | Aceptada |
-| [0003](0003-auth-ambiental.md)           | Auth ambiental y checkOrigin en false      | Aceptada |
-| [0004](0004-skills-canonicas.md)         | Skills canónicas y skills de Wix pinneadas | Aceptada |
-| [0005](0005-stack-no-diseno.md)          | Un stack, no un diseño                     | Aceptada |
-| [0006](0006-verticales-bajo-demanda.md)  | Verticales bajo demanda                    | Aceptada |
-| [0007](0007-react-solo-islas.md)         | React solo para islas del kit              | Aceptada |
-| [0008](0008-secretos-y-release.md)       | Secretos y release                         | Aceptada |
-| [0009](0009-un-idioma.md)                | Un idioma configurable                     | Aceptada |
-| [0010](0010-medicion-apagada.md)         | Medición apagada                           | Aceptada |
-| [0011](0011-catalogo-paralelo.md)        | Prohibido el catálogo paralelo             | Aceptada |
-| [0012](0012-fuentes-propias.md)          | Fuentes propias                            | Aceptada |
+| ADR                                  | Decision                               | Status   |
+| ------------------------------------ | -------------------------------------- | -------- |
+| [0001](0001-content-lives-in-wix.md) | Business content lives in Wix          | Accepted |
+| [0002](0002-astro-managed-by-wix.md) | Astro managed by Wix, on the server    | Accepted |
+| [0003](0003-ambient-auth.md)         | Ambient auth and checkOrigin false     | Accepted |
+| [0004](0004-canonical-skills.md)     | Canonical skills and pinned Wix skills | Accepted |
+| [0005](0005-stack-not-a-design.md)   | A stack, not a design                  | Accepted |
+| [0006](0006-verticals-on-demand.md)  | Verticals on demand                    | Accepted |
+| [0007](0007-react-islands-only.md)   | React only for kit islands             | Accepted |
+| [0008](0008-secrets-and-release.md)  | Secrets and release                    | Accepted |
+| [0009](0009-one-locale.md)           | One locale, no language routing        | Accepted |
+| [0010](0010-measurement-off.md)      | Measurement off                        | Accepted |
+| [0011](0011-no-parallel-catalog.md)  | No parallel catalog                    | Accepted |
+| [0012](0012-self-hosted-fonts.md)    | Self-hosted fonts                      | Accepted |
+| [0013](0013-repository-language.md)  | Repository working language is English | Accepted |
+| [0014](0014-pages-through-git.md)    | New pages ship through Git             | Accepted |

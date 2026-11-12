@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Skills en skills/, symlinks de agentes, inventario y hash de las de Wix.
- * Uso: node scripts/check-skills.mjs
- *      node scripts/check-skills.mjs --update-lock
+ * Skills in skills/, agent symlinks, inventory, and the hash of the Wix ones.
+ * Usage: node scripts/check-skills.mjs
+ *        node scripts/check-skills.mjs --update-lock
  */
 import { createHash } from "node:crypto"
 import fs from "node:fs"
@@ -17,19 +17,19 @@ const LINKS = [
   ".claude/skills",
   ".codex/skills",
 ]
-const INVENTORY = "skills/INVENTARIO.md"
+const INVENTORY = "skills/INVENTORY.md"
 const LOCK = "skills-lock.json"
 const PINNED = ["wix-headless-kit", "wix-docs", "wix-manage"]
 const FICHA_FIELDS = [
-  "Invocación",
-  "Función",
-  "Casos de uso",
-  "Cuándo no usarla",
-  "Entradas",
-  "Salidas",
-  "Requisitos",
-  "Origen",
-  "Estado",
+  "Invocation",
+  "Purpose",
+  "Use cases",
+  "When not to use it",
+  "Inputs",
+  "Outputs",
+  "Requirements",
+  "Origin",
+  "Status",
 ]
 
 const r = reporter()
@@ -88,9 +88,9 @@ for (const link of LINKS) {
   if (target === "../skills") r.ok(`${link} → ../skills`)
   else {
     r.fail(
-      `${link} debe ser un symlink a ../skills` +
+      `${link} must be a symlink to ../skills` +
         (fs.existsSync(link)
-          ? " (en Windows: git config core.symlinks true y vuelve a clonar)"
+          ? " (on Windows: git config core.symlinks true, then clone again)"
           : ""),
     )
   }
@@ -105,22 +105,21 @@ const skills = fs
 for (const name of skills) {
   const file = path.join(SKILLS_DIR, name, "SKILL.md")
   if (!fs.existsSync(file)) {
-    r.fail(`${name}: falta SKILL.md`)
+    r.fail(`${name}: missing SKILL.md`)
     continue
   }
   const meta = frontmatter(fs.readFileSync(file, "utf8"))
-  if (!meta)
-    r.fail(`${file}: falta el frontmatter (--- name / description ---)`)
+  if (!meta) r.fail(`${file}: missing frontmatter (--- name / description ---)`)
   else {
     if (meta.name !== name)
-      r.fail(`${file}: name "${meta.name}" debe ser "${name}"`)
+      r.fail(`${file}: name "${meta.name}" must be "${name}"`)
     if (!meta.description || meta.description.trim().length < 40) {
-      r.fail(`${file}: description vacía o demasiado corta`)
+      r.fail(`${file}: description empty or too short`)
     }
   }
 }
 
-if (!fs.existsSync(INVENTORY)) r.fail(`falta ${INVENTORY}`)
+if (!fs.existsSync(INVENTORY)) r.fail(`missing ${INVENTORY}`)
 else {
   const inventory = fs.readFileSync(INVENTORY, "utf8")
   const fichas = new Map()
@@ -133,26 +132,26 @@ else {
   )
   for (const name of skills) {
     if (!tableRows.has(name))
-      r.fail(`${INVENTORY}: falta la fila de \`${name}\` en la tabla resumen`)
+      r.fail(`${INVENTORY}: missing summary row for \`${name}\``)
     const ficha = fichas.get(name)
     if (!ficha) {
-      r.fail(`${INVENTORY}: falta la ficha "### \`${name}\`"`)
+      r.fail(`${INVENTORY}: missing entry "### \`${name}\`"`)
       continue
     }
     const missing = FICHA_FIELDS.filter(
       (field) => !ficha.includes(`**${field}:**`),
     )
     if (missing.length > 0)
-      r.fail(`${INVENTORY} › ${name}: faltan ${missing.join(", ")}`)
+      r.fail(`${INVENTORY} › ${name}: missing ${missing.join(", ")}`)
   }
   for (const name of new Set([...fichas.keys(), ...tableRows])) {
     if (!skills.includes(name))
-      r.fail(`${INVENTORY}: \`${name}\` no existe en skills/`)
+      r.fail(`${INVENTORY}: \`${name}\` does not exist in skills/`)
   }
-  r.ok(`${skills.length} skills con ficha en el inventario`)
+  r.ok(`${skills.length} skills with an inventory entry`)
 }
 
-if (!fs.existsSync(LOCK)) r.fail(`falta ${LOCK}`)
+if (!fs.existsSync(LOCK)) r.fail(`missing ${LOCK}`)
 else {
   const lock = JSON.parse(fs.readFileSync(LOCK, "utf8"))
   const update = process.argv.includes("--update-lock")
@@ -160,25 +159,25 @@ else {
     const entry = lock.skills?.[name]
     const dir = path.join(SKILLS_DIR, name)
     if (!entry) {
-      r.fail(`${LOCK}: falta ${name}`)
+      r.fail(`${LOCK}: missing ${name}`)
       continue
     }
     if (!fs.existsSync(dir)) {
-      r.fail(`${LOCK}: ${name} no existe en skills/`)
+      r.fail(`${LOCK}: ${name} does not exist in skills/`)
       continue
     }
     const hash = skillHash(dir)
     if (update) entry.computedHash = hash
     else if (hash !== entry.computedHash) {
       r.fail(
-        `${name}: el contenido no coincide con ${LOCK} (no edites skills de Wix; si la actualizaste, corre node scripts/check-skills.mjs --update-lock)`,
+        `${name}: content does not match ${LOCK} (do not edit Wix skills; if you updated one, run node scripts/check-skills.mjs --update-lock)`,
       )
-    } else r.ok(`${name}: hash igual al de ${LOCK}`)
+    } else r.ok(`${name}: hash matches ${LOCK}`)
   }
   if (update) {
     fs.writeFileSync(LOCK, `${JSON.stringify(lock, null, 2)}\n`)
-    r.ok(`${LOCK} actualizado`)
+    r.ok(`${LOCK} updated`)
   }
 }
 
-r.done("skills en orden")
+r.done("skills ok")

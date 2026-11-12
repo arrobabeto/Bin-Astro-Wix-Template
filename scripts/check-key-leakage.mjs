@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Falla si un secreto aparece con valor, o si hay material de llave.
- * Nombrar WIX_CLIENT_SECRET en la guía está permitido. Pegar un valor, no.
- * La guía de entorno puede mencionar las cadenas que este check busca.
+ * Fails if a secret is assigned a value, or if key material appears.
+ * Naming WIX_CLIENT_SECRET in the guide is allowed. Pasting a value is not.
+ * The environment guide may mention the strings this check looks for.
  */
 import fs from "node:fs"
 import path from "node:path"
@@ -18,7 +18,7 @@ const LITERALS = [
 ]
 const DOCUMENTATION = new Set([
   "scripts/check-key-leakage.mjs",
-  "docs/guias/variables-de-entorno.md",
+  "docs/guides/environment.md",
 ])
 const PINNED_SKILL = /^skills\/wix-(headless-kit|docs|manage)\//
 const SKIP_EXT = /\.(png|jpe?g|gif|webp|svg|ico|woff2?)$/i
@@ -47,21 +47,21 @@ for (const file of files()) {
   lines.forEach((line, index) => {
     const where = `${file}:${index + 1}`
     ASSIGN.lastIndex = 0
-    // Las skills pinneadas escriben .env.local desde valores que ya tienen.
-    // No se editan, y ese código no es un secreto pegado en el template.
+    // Pinned skills write .env.local from values they already have.
+    // They are not edited, and that code is not a secret pasted into the template.
     if (!PINNED_SKILL.test(file)) {
       for (const match of line.matchAll(ASSIGN)) {
         if (!isEmptyValue(match[1]))
-          r.fail(`${where}: ${match[0].split("=")[0].trim()} tiene un valor`)
+          r.fail(`${where}: ${match[0].split("=")[0].trim()} has a value`)
       }
     }
     if (DOCUMENTATION.has(file)) return
     for (const { name, regex } of LITERALS) {
       regex.lastIndex = 0
-      if (regex.test(line)) r.fail(`${where}: aparece ${name}`)
+      if (regex.test(line)) r.fail(`${where}: found ${name}`)
     }
   })
 }
 
-r.ok(`${scanned} archivos revisados`)
-r.done("sin fugas de secretos")
+r.ok(`${scanned} files scanned`)
+r.done("no secret leaks")

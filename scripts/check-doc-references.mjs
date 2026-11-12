@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * Enlaces relativos de Markdown y rutas de código entre backticks.
- * Las skills de Wix pinneadas no se editan: sus enlaces no se revisan aquí.
+ * Relative Markdown links and code paths in backticks.
+ * Pinned Wix skills are not edited: their links are not checked here.
  *
- * Un documento puede declarar ejemplos que no existen:
- *   <!-- check:docs ejemplos: src/no-existe.ts -->
+ * A document may declare examples that do not exist:
+ *   <!-- check:docs examples: src/does-not-exist.ts -->
  */
 import fs from "node:fs"
 import path from "node:path"
@@ -31,8 +31,8 @@ const CODE_PATH = new RegExp(
   "g",
 )
 const MD_LINK = /\]\(([^)\s]+)\)/g
-const PLACEHOLDER = /[*<>{}]|AAAA|nombre-skill|\.\.\.$/
-const EXAMPLES = /<!--\s*check:docs ejemplos:([^>]*)-->/g
+const PLACEHOLDER = /[*<>{}]|AAAA|nombre-skill|skill-name|\.\.\.$/
+const EXAMPLES = /<!--\s*check:docs examples:([^>]*)-->/g
 
 const r = reporter()
 
@@ -65,7 +65,7 @@ for (const file of files) {
     if (PLACEHOLDER.test(ref) || isExample(ref)) continue
     checked += 1
     if (!fs.existsSync(ref.replace(/\/$/, "")))
-      r.fail(`${file}: no existe \`${ref}\``)
+      r.fail(`${file}: missing \`${ref}\``)
   }
   for (const match of content.matchAll(MD_LINK)) {
     const href = match[1]
@@ -78,9 +78,9 @@ for (const file of files) {
       : path.normalize(path.join(path.dirname(file), clean))
     if (!target || target === ".") continue
     checked += 1
-    if (!fs.existsSync(target)) r.fail(`${file}: enlace roto → ${href}`)
+    if (!fs.existsSync(target)) r.fail(`${file}: broken link → ${href}`)
   }
 }
 
-r.ok(`${checked} referencias revisadas en ${files.length} documentos`)
-r.done("referencias de la documentación válidas")
+r.ok(`${checked} references checked in ${files.length} documents`)
+r.done("documentation references ok")

@@ -1,14 +1,14 @@
 ---
-description: Reglas generales de BAWT. La fuente es AGENTS.md.
+description: BAWT ground rules. The source is AGENTS.md.
 alwaysApply: true
 ---
 
-Lee y sigue [AGENTS.md](mdc:AGENTS.md). No dupliques estas reglas en otro archivo.
+Read and follow [AGENTS.md](mdc:AGENTS.md). Do not copy these rules into another file.
 
-Lo esencial:
+The short version:
 
-- Responde en español.
-- BAWT es un stack, no un sitio de ejemplo.
-- El contenido de negocio vive en Wix. No inventes ítems, precios, testimonios ni posts.
-- Revisa si hay una skill para la tarea en [skills/INVENTARIO.md](mdc:skills/INVENTARIO.md) y léela antes.
-- Termina con `npm run verify` en verde. Si un check falla, arregla la causa.
+- Reply in English.
+- BAWT is a stack, not a sample site.
+- Business content lives in Wix. Do not invent items, prices, testimonials, or posts.
+- Check whether a skill covers the task in [skills/INVENTORY.md](mdc:skills/INVENTORY.md) and read it first.
+- Finish with `npm run verify` green. If a check fails, fix the cause.

@@ -22,12 +22,12 @@ for (const dir of ["src", "public"]) {
     const { size } = fs.statSync(file)
     const rel = file.split(path.sep).join("/")
     if (RASTER.test(file) && size > RASTER_MAX) {
-      r.fail(`${rel}: ${kb(size)} (máximo ${kb(RASTER_MAX)} para un raster)`)
+      r.fail(`${rel}: ${kb(size)} (max ${kb(RASTER_MAX)} for a raster)`)
     }
     if (SVG.test(file) && size > SVG_MAX) {
-      r.fail(`${rel}: ${kb(size)} (máximo ${kb(SVG_MAX)} para un SVG)`)
+      r.fail(`${rel}: ${kb(size)} (max ${kb(SVG_MAX)} for an SVG)`)
     }
   }
 }
 
-r.done("peso de assets dentro del presupuesto")
+r.done("asset weight inside the budget")

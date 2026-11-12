@@ -13,7 +13,7 @@ export function reporter() {
     },
     done(message) {
       if (failed > 0) {
-        console.error(`\n${failed} problema(s).`)
+        console.error(`\n${failed} problem(s).`)
         process.exit(1)
       }
       console.log(`\n${message}`)

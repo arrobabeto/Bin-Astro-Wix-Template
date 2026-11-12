@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Un array de objetos en src/data o src/lib que además importa src/wix
- * es un catálogo paralelo: el CMS deja de ser la fuente.
+ * An array of objects in src/data or src/lib that also imports src/wix
+ * is a parallel catalog: the CMS stops being the source.
  */
 import fs from "node:fs"
 import path from "node:path"
@@ -39,8 +39,8 @@ if (isMain) {
   const r = reporter()
   for (const file of findParallelCatalog(process.cwd())) {
     r.fail(
-      `${file}: exporta un array de objetos e importa src/wix. El CMS es la fuente; no rellenes huecos desde el repo.`,
+      `${file}: exports an array of objects and imports src/wix. The CMS is the source; do not fill gaps from the repo.`,
     )
   }
-  r.done("sin catálogo paralelo")
+  r.done("no parallel catalog")
 }

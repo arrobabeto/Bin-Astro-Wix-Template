@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Quita el marcador bawt:demo del home y deja una página que sigue compilando.
- * No toca los textos legales.
+ * Removes the bawt:demo marker from the home and leaves a page that still compiles.
+ * Does not touch the legal texts.
  *
  * Uso: node scripts/demo-clear.mjs
  *      node scripts/demo-clear.mjs --dry-run
@@ -29,7 +29,7 @@ import { site } from "../config/site"
 
 if (!fs.existsSync(FILE) || !fs.readFileSync(FILE, "utf8").includes(MARKER)) {
   console.error(
-    `FAIL  ${FILE} no tiene el marcador ${MARKER}. El home ya es del proyecto: no lo reemplaces desde aquí.`,
+    `FAIL  ${FILE} has no ${MARKER} marker. The home already belongs to the project: do not replace it from here.`,
   )
   process.exit(1)
 }
@@ -41,9 +41,9 @@ const diff = spawnSync("diff", ["-u", FILE, nextFile], { encoding: "utf8" })
 process.stdout.write(diff.stdout || "")
 
 if (dryRun) {
-  console.log("\nSimulación: no se escribió nada.")
+  console.log("\nDry run: nothing was written.")
   process.exit(0)
 }
 
 fs.writeFileSync(FILE, NEXT)
-console.log(`ok    ${FILE} ya no tiene ${MARKER}`)
+console.log(`ok    ${FILE} no longer has ${MARKER}`)

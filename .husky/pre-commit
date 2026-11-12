@@ -1,10 +1,10 @@
 #!/usr/bin/env sh
 
-# main se protege: el trabajo va en feature/*, fix/* o contenido/*.
-# El primer commit no tiene HEAD. Escape: ALLOW_MAIN_COMMIT=1.
+# main stays protected: work goes on feature/*, fix/*, content/*, or page/*.
+# The first commit has no HEAD. Escape: ALLOW_MAIN_COMMIT=1.
 branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
 if [ "$branch" = "main" ] && git rev-parse --verify HEAD >/dev/null 2>&1 && [ "$ALLOW_MAIN_COMMIT" != "1" ]; then
-  echo "error: no hagas commit directo a main. Crea una rama feature/..., fix/... o contenido/..."
+  echo "error: do not commit directly to main. Create a branch feature/..., fix/..., content/..., or page/..."
   exit 1
 fi
 

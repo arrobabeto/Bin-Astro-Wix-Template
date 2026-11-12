@@ -2,10 +2,10 @@ import type { APIRoute } from "astro"
 
 import { site } from "../config/site"
 
-// El host de `wix preview` no se distinguió al armar el template: no hubo
-// captura. No se inventa un sufijo de dominio. Hasta confirmarlo, se permite
-// el rastreo. Cuando se sepa distinguir el preview, si el host de la petición
-// no es el de site.url, la respuesta debe ser `Disallow: /`.
+// The `wix preview` host was not identified when the template was built:
+// there was no capture. No domain suffix is invented. Until that is confirmed,
+// crawling is allowed. Once preview can be told apart, if the request host
+// is not site.url, the response must be `Disallow: /`.
 
 export const GET: APIRoute = () => {
   const lines = ["User-agent: *", "Allow: /"]
