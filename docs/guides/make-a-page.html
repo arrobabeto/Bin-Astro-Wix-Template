@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Make a page</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #1a1a1a;
+        --muted: #5c5c5c;
+        --line: #e6e6e6;
+        --paper: #fafafa;
+        --card: #fff;
+        --accent: #111;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.5;
+      }
+
+      main {
+        max-width: 38rem;
+        margin: 0 auto;
+        padding: 4.5rem 1.5rem 5rem;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 560;
+        letter-spacing: -0.03em;
+      }
+
+      .lead {
+        margin: 0.75rem 0 0;
+        color: var(--muted);
+        font-size: 1.05rem;
+      }
+
+      ol {
+        list-style: none;
+        margin: 2.5rem 0 0;
+        padding: 0;
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      li {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 1rem;
+        padding: 1.25rem 1.25rem 1.15rem;
+      }
+
+      .step {
+        display: flex;
+        gap: 0.9rem;
+        align-items: baseline;
+      }
+
+      .num {
+        flex: none;
+        width: 1.6rem;
+        color: var(--muted);
+        font-variant-numeric: tabular-nums;
+        font-size: 0.95rem;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 600;
+      }
+
+      p {
+        margin: 0.35rem 0 0;
+      }
+
+      .body {
+        margin-left: 2.5rem;
+      }
+
+      .body p {
+        color: var(--muted);
+      }
+
+      .prompt {
+        margin: 0.9rem 0 0;
+        border: 1px solid var(--line);
+        border-radius: 0.75rem;
+        overflow: hidden;
+      }
+
+      pre {
+        margin: 0;
+        padding: 0.9rem 1rem 0.85rem;
+        white-space: pre-wrap;
+        font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+        font-size: 0.92rem;
+        line-height: 1.45;
+      }
+
+      button {
+        display: block;
+        width: 100%;
+        border: 0;
+        border-top: 1px solid var(--line);
+        background: transparent;
+        color: var(--ink);
+        font: inherit;
+        font-size: 0.85rem;
+        padding: 0.55rem 1rem;
+        text-align: left;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #f3f3f3;
+      }
+
+      button[data-state="copied"] {
+        color: var(--muted);
+      }
+
+      .note {
+        margin: 2rem 0 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Make a page</h1>
+      <p class="lead">Four steps. You still describe the page your way.</p>
+
+      <ol>
+        <li>
+          <div class="step">
+            <span class="num">01</span>
+            <h2>The command</h2>
+          </div>
+          <div class="body">
+            <p>
+              One skill: <code>/create-page</code>. You describe the page.
+              Claude builds it in the site's current look.
+            </p>
+          </div>
+        </li>
+
+        <li>
+          <div class="step">
+            <span class="num">02</span>
+            <h2>Make the page</h2>
+          </div>
+          <div class="body">
+            <p>New page, or a change to one that already exists.</p>
+            <div class="prompt">
+              <pre>
+/create-page
+
+[Describe the page the way you already do.]
+
+Show it to me before you publish.</pre>
+              <button type="button" data-copy>Copy</button>
+            </div>
+          </div>
+        </li>
+
+        <li>
+          <div class="step">
+            <span class="num">03</span>
+            <h2>Put it on the site</h2>
+          </div>
+          <div class="body">
+            <p>Nothing goes live until you send this.</p>
+            <div class="prompt">
+              <pre>Approved. Publish it.</pre>
+              <button type="button" data-copy>Copy</button>
+            </div>
+          </div>
+        </li>
+
+        <li>
+          <div class="step">
+            <span class="num">04</span>
+            <h2>If something is wrong</h2>
+          </div>
+          <div class="body">
+            <p>Before it is live, say what to change in your own words.</p>
+            <p>If it is already on the site, send this.</p>
+            <div class="prompt">
+              <pre>
+Take this page off the site.
+Put the site back to how it was.</pre>
+              <button type="button" data-copy>Copy</button>
+            </div>
+          </div>
+        </li>
+      </ol>
+
+      <p class="note">
+        If Claude Code is not open on this project, ask the person who set the
+        site up.
+      </p>
+    </main>
+    <script>
+      for (const button of document.querySelectorAll("[data-copy]")) {
+        button.addEventListener("click", async () => {
+          const text = button.previousElementSibling.textContent.trim()
+          try {
+            await navigator.clipboard.writeText(text)
+          } catch {
+            return
+          }
+          button.dataset.state = "copied"
+          button.textContent = "Copied"
+          setTimeout(() => {
+            button.dataset.state = ""
+            button.textContent = "Copy"
+          }, 1600)
+        })
+      }
+    </script>
+  </body>
+</html>

@@ -1,4 +1,4 @@
-name: Calidad
+name: Quality
 
 on:
   pull_request:
@@ -14,11 +14,16 @@ concurrency:
 
 jobs:
   quality:
-    name: Calidad
+    name: Quality
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      PAGE_SCOPE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+      PAGE_SCOPE_BRANCH: ${{ github.head_ref || github.ref_name }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc

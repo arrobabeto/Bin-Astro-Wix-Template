@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Primer arranque. No crea el sitio de Wix: eso es la skill nuevo-sitio.
+ * First boot. Does not create the Wix site: that is the new-site skill.
  */
 import { spawnSync } from "node:child_process"
 import { existsSync } from "node:fs"
@@ -8,7 +8,7 @@ import { existsSync } from "node:fs"
 const major = process.versions.node.split(".")[0]
 if (major !== "22") {
   console.error(
-    `Este template necesita Node 22 (tienes ${process.versions.node}). Instala Node 22 y no sigas con esta versión.`,
+    `This template needs Node 22 (you have ${process.versions.node}). Install Node 22 and do not continue on this version.`,
   )
   process.exit(1)
 }
@@ -21,15 +21,15 @@ const required = [
 const missing = required.filter((file) => !existsSync(file))
 if (missing.length > 0) {
   console.error(
-    "El clone está incompleto. Faltan skills de Wix que el template ya trae:",
+    "The clone is incomplete. Wix skills the template already ships are missing:",
   )
   for (const file of missing) console.error(`  ${file}`)
-  console.error("No se descargan en silencio. Vuelve a clonar el template.")
+  console.error("They are not downloaded quietly. Clone the template again.")
   process.exit(1)
 }
 
 if (!existsSync("node_modules")) {
-  console.error("Primero va npm install.")
+  console.error("npm install comes first.")
   process.exit(1)
 }
 
@@ -37,9 +37,9 @@ const sync = spawnSync("npx", ["astro", "sync"], {
   stdio: "inherit",
   env: {
     ...process.env,
-    // La integración exige la variable para cargar el config. Vacía no es un
-    // secreto: el client id commiteado sigue en null. Si `wix env pull` ya la
-    // definió, se conserva.
+    // The integration requires the variable to load the config. Empty is not a
+    // secret: the committed client id stays null. If `wix env pull` already
+    // set it, that value is kept.
     WIX_CLIENT_ID: process.env.WIX_CLIENT_ID ?? "",
   },
 })
@@ -48,6 +48,4 @@ if (sync.status !== 0) process.exit(sync.status ?? 1)
 const husky = spawnSync("npx", ["husky"], { stdio: "inherit" })
 if (husky.status !== 0) process.exit(husky.status ?? 1)
 
-console.log(
-  "Siguiente paso: pide nuevo-sitio, o lee docs/guias/crear-sitio-nuevo.md.",
-)
+console.log("Next step: ask for new-site, or read docs/guides/create-site.md.")

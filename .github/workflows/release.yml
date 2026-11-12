@@ -25,7 +25,7 @@ jobs:
           WIX_API_KEY: ${{ secrets.WIX_API_KEY }}
         run: |
           if [ -z "$WIX_API_KEY" ]; then
-            echo "Falta el secreto WIX_API_KEY. No uses WIX_CLIENT_SECRET. Cómo crearlo: docs/guias/publicar.md"
+            echo "Missing secret WIX_API_KEY. Do not use WIX_CLIENT_SECRET. How to create it: docs/guides/publish.md"
             exit 1
           fi
       - name: Login

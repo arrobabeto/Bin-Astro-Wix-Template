@@ -5,10 +5,10 @@ import wixPages from "@wix/astro-pages"
 import wixHostingAdapter from "@wix/astro-wix-hosting-adapter"
 import { defineConfig } from "astro/config"
 
-// `checkOrigin: false` es el contrato de Astro gestionado por Wix, no un
-// descuido. Ver docs/adr/0003-auth-ambiental.md.
-// `robots: false` deja `/robots.txt` al endpoint del proyecto. El del kit
-// choca con esa ruta y pide un client id real para ir a buscar el robots de Wix.
+// `checkOrigin: false` is the contract of Astro managed by Wix, not an
+// oversight. See docs/adr/0003-ambient-auth.md.
+// `robots: false` leaves `/robots.txt` to the project's endpoint. The kit's
+// endpoint clashes with that route and asks for a real client id to fetch Wix's robots.
 export default defineConfig({
   vite: { plugins: [tailwindcss()] },
   integrations: [wix({ robots: false }), wixPages(), react()],

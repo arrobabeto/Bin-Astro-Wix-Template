@@ -1,14 +1,14 @@
-## Qué cambia
+## What changes
 
-<!-- Presentación, una colección de Wix, o las dos. -->
+<!-- Presentation, a Wix collection, or both. -->
 
-## Cómo se probó
+## How it was tested
 
-- [ ] `npm run verify` pasa en local (o el check Calidad está en verde).
+- [ ] `npm run verify` passes locally (or the Quality check is green).
 
-## Publicar
+## Publish
 
-- [ ] Hay que publicar: merge a `main` (o `wix release` local).
-- [ ] No hay que publicar: el cambio no se ve en el sitio, o el repo todavía no tiene `wix.config.json`.
+- [ ] This needs a publish: merge to `main` (or a local `wix release`).
+- [ ] This does not need a publish: the change is not visible on the site, or the repo does not have `wix.config.json` yet.
 
-El workflow Release no corre en el pull request. En el repositorio del template, sin `wix.config.json`, el job se salta.
+The Release workflow does not run on the pull request. In the template repository, without `wix.config.json`, the job is skipped.

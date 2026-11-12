@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** En src/ no se hardcodea el dev server. wix dev elige el puerto. */
+/** src/ does not hardcode the dev server. wix dev picks the port. */
 import fs from "node:fs"
 import path from "node:path"
 
@@ -21,8 +21,8 @@ for (const file of walk("src")) {
       )
         return
       if (pattern.test(line))
-        r.fail(`${rel}:${index + 1}: no hardcodees el host local`)
+        r.fail(`${rel}:${index + 1}: do not hardcode the local host`)
     })
 }
 
-r.done("sin host local en src/")
+r.done("no local host in src/")

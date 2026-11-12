@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+Repository working language is English. `create-page` ships a new page through a `page/*` pull request, and `check:page-scope` rejects deleting an existing page.
+
 ## 0.1.0
 
-Primera versión del template: Astro en hosting de Wix, skills, checks y documentación. Sin sitio de ejemplo y sin verticales instalados de fábrica.
+First template release: Astro on Wix hosting, skills, checks, and docs. No sample site and no verticals installed by default.

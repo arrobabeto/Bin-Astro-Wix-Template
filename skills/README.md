@@ -1,7 +1,5 @@
 # Skills
 
-Las instrucciones que un agente debe seguir viven en esta carpeta. El inventario
-obligatorio está en [INVENTARIO.md](INVENTARIO.md). Cómo se invocan y por qué las
-de Wix no se editan: [docs/guias/skills.md](../docs/guias/skills.md).
+The instructions an agent must follow live in this folder. The required inventory is in [INVENTORY.md](INVENTORY.md). How they are invoked, and why the Wix ones are not edited: [docs/guides/skills.md](../docs/guides/skills.md).
 
-`_plantilla/` no es una skill. Es el molde para crear una.
+`_template/` is not a skill. It is the mold for creating one.

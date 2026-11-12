@@ -1,15 +1,15 @@
 # BAWT
 
-Bin Astro and Wix Template. Es un stack, no un sitio: Astro 7 en hosting de Wix, Tailwind 4 y el seam de autenticación del kit. El contenido de negocio vive en el dashboard de Wix.
+Bin Astro and Wix Template. It is a stack, not a site: Astro 7 on Wix hosting, Tailwind 4, and the kit's auth seam. Business content lives in the Wix dashboard.
 
-Empieza por [docs/guias/empieza-aqui.md](docs/guias/empieza-aqui.md).
+Start at [docs/guides/start-here.md](docs/guides/start-here.md).
 
-Repositorio: https://github.com/arrobabeto/Bin-Astro-Wix-Template
+Repository: https://github.com/arrobabeto/Bin-Astro-Wix-Template
 
-El workflow **Calidad** corre en cada pull request y no usa secretos. El workflow **Release** solo corre en `main` si el repositorio ya tiene `wix.config.json`. En este template ese archivo no está, y el job se salta: un check skipped no es un fallo. Publicar empieza en el repo del cliente, después de `nuevo-sitio`.
+The **Quality** workflow runs on every pull request and uses no secrets. The **Release** workflow runs on `main` only when the repository already has `wix.config.json`. This template does not have that file, and the job is skipped: a skipped check is not a failure. Publishing starts in the client repo, after `new-site`.
 
-## Licencia
+## License
 
-MIT. Copyright (c) 2026 arrobabeto. Ver [LICENSE](LICENSE).
+MIT. Copyright (c) 2026 arrobabeto. See [LICENSE](LICENSE).
 
-El nombre BAWT no se licencia para marcar otro producto.
+The name BAWT is not licensed to brand another product.

@@ -2,7 +2,7 @@
   "name": "bawt",
   "displayName": "Bin Astro and Wix Template",
   "version": "0.1.0",
-  "description": "Template de Astro en hosting de Wix. Stack y estructura, sin sitio de ejemplo.",
+  "description": "Astro template on Wix hosting. A stack and a structure, with no sample site.",
   "private": true,
   "license": "MIT",
   "type": "module",
@@ -26,12 +26,13 @@
     "check:leakage": "node scripts/check-key-leakage.mjs",
     "check:placeholders": "node scripts/check-placeholders.mjs",
     "check:docs": "node scripts/check-doc-references.mjs",
+    "check:page-scope": "node scripts/check-page-scope.mjs",
     "check:skills": "node scripts/check-skills.mjs",
     "check:no-localhost": "node scripts/check-no-localhost.mjs",
     "check:google-fonts": "node scripts/check-google-fonts.mjs",
     "check:parallel-catalog": "node scripts/check-parallel-catalog.mjs",
     "check:assets": "node scripts/check-asset-budget.mjs",
-    "check:source": "npm run check:node && npm run check:placeholders && npm run check:docs && npm run check:skills && npm run check:no-localhost && npm run check:google-fonts && npm run check:parallel-catalog && npm run check:assets && npm run check:leakage",
+    "check:source": "npm run check:node && npm run check:placeholders && npm run check:docs && npm run check:skills && npm run check:page-scope && npm run check:no-localhost && npm run check:google-fonts && npm run check:parallel-catalog && npm run check:assets && npm run check:leakage",
     "verify": "npm run lint && npm run format:check && npm run typecheck && npm run check:source && npm run test"
   },
   "lint-staged": {

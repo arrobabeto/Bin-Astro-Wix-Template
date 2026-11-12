@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Antes de template.lock.json el template puede traer placeholders.
- * Cuando el archivo existe, el sitio ya se dio de alta y esos textos tienen
- * que haber salido de src/.
+ * Before template.lock.json the template may ship placeholders.
+ * Once that file exists, the site is set up and those strings must be
+ * gone from src/.
  */
 import fs from "node:fs"
 import path from "node:path"
@@ -21,8 +21,8 @@ const LEGAL_TOKEN = "bawt:legal-pendiente"
 const r = reporter()
 
 if (!fs.existsSync(LOCK)) {
-  r.ok("sin template.lock.json: los placeholders del template están permitidos")
-  r.done("placeholders en orden")
+  r.ok("no template.lock.json: template placeholders are allowed")
+  r.done("placeholders ok")
   process.exit(0)
 }
 
@@ -31,10 +31,11 @@ for (const file of walk("src")) {
   const lines = fs.readFileSync(file, "utf8").split("\n")
   lines.forEach((line, index) => {
     for (const token of TOKENS) {
-      if (line.includes(token)) r.fail(`${rel}:${index + 1}: sigue "${token}"`)
+      if (line.includes(token))
+        r.fail(`${rel}:${index + 1}: still has "${token}"`)
     }
     if (rel.startsWith("src/content/legal/") && line.includes(LEGAL_TOKEN)) {
-      r.fail(`${rel}:${index + 1}: sigue el marcador legal`)
+      r.fail(`${rel}:${index + 1}: legal marker still present`)
     }
   })
 }
@@ -42,8 +43,8 @@ for (const file of walk("src")) {
 const site = fs.readFileSync("src/config/site.ts", "utf8")
 if (/url:\s*["']["']/.test(site)) {
   r.fail(
-    "src/config/site.ts: url está vacía; sin ella no hay canonical. Rellénala con la URL pública.",
+    "src/config/site.ts: url is empty; without it there is no canonical. Fill it with the public URL.",
   )
 }
 
-r.done("placeholders en orden")
+r.done("placeholders ok")
