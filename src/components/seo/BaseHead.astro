@@ -34,6 +34,7 @@ const jsonLd = publishJsonLd
       ...(site.url ? { url: site.url } : {}),
     }
   : null
+const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replace(/</g, "\\u003c") : ""
 ---
 
 <meta charset="utf-8" />
@@ -47,6 +48,4 @@ const jsonLd = publishJsonLd
 {canonical && <meta property="og:url" content={canonical} />}
 <meta property="og:type" content="website" />
 {image && <meta property="og:image" content={image} />}
-{jsonLd && (
-  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-)}
+{jsonLd && <script type="application/ld+json" set:html={jsonLdHtml} />}

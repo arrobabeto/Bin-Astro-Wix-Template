@@ -1,7 +1,9 @@
 name: Release
 
 on:
-  push:
+  workflow_run:
+    workflows: [Quality]
+    types: [completed]
     branches: [main]
 
 permissions:
@@ -10,17 +12,34 @@ permissions:
 jobs:
   release:
     name: Release
-    if: hashFiles('wix.config.json') != ''
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+      - name: Check wix.config.json
+        id: wix_config
+        run: |
+          if [ -f wix.config.json ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "wix.config.json is absent. The job does not publish."
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
       - uses: actions/setup-node@v4
+        if: steps.wix_config.outputs.present == 'true'
         with:
           node-version-file: .nvmrc
           cache: npm
-      - run: npm ci
-      - name: Comprobar WIX_API_KEY
+      - if: steps.wix_config.outputs.present == 'true'
+        run: npm ci
+      - name: Check WIX_API_KEY
+        if: steps.wix_config.outputs.present == 'true'
         env:
           WIX_API_KEY: ${{ secrets.WIX_API_KEY }}
         run: |
@@ -29,9 +48,15 @@ jobs:
             exit 1
           fi
       - name: Login
+        if: steps.wix_config.outputs.present == 'true'
         env:
           WIX_API_KEY: ${{ secrets.WIX_API_KEY }}
-        run: npx @wix/cli@latest login --api-key "$WIX_API_KEY"
-      - run: npx @wix/cli@latest env pull
-      - run: npx @wix/cli@latest build
-      - run: npx @wix/cli@latest release --comment "ci ${GITHUB_SHA}"
+        run: npx wix login --api-key "$WIX_API_KEY"
+      - if: steps.wix_config.outputs.present == 'true'
+        run: npx wix env pull
+      - if: steps.wix_config.outputs.present == 'true'
+        run: npx wix build
+      - if: steps.wix_config.outputs.present == 'true'
+        env:
+          RELEASE_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: npx wix release --comment "ci ${RELEASE_SHA}"

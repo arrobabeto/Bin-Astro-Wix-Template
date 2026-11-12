@@ -12,10 +12,9 @@ ADR 0009 set the repository working language (guides, skills, check messages) to
 
 Guides, ADRs, own skills, agent rules, and check messages are English. Skill folder names and guide slugs are English. `site.locale` stays `es` until a project changes it.
 
-These stay in Spanish. They are site content or a legal source, not the working language:
+These stay in Spanish. They are site content, not the working language:
 
 - `src/content/legal/` and the visitor-facing chrome around it (`src/pages/legal/`, `src/pages/404.astro`)
-- `skills/legal-text/references/mexico.md`
 - The example strings in `src/config/site.ts` (`Sitio nuevo`, `Descripción pendiente`), which match the default locale
 
 Pinned Wix skills are not edited.
@@ -23,7 +22,7 @@ Pinned Wix skills are not edited.
 ## Alternatives
 
 - **Keep the Spanish guides and add English copies.** Two sources of truth. ADR 0009 already rejected parallel languages.
-- **Translate the legal example and the Mexico reference.** The default locale is still `es`, and the Mexico note is a source text, not a guide.
+- **Translate the legal example.** The default locale is still `es`, and those pages are site content.
 
 ## Consequences
 

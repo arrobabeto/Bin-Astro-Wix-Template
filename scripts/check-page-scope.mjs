@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Rejects deleting an existing page. On page/* the diff may only add that page.
+ * Rejects deleting an existing page. On page/* the diff may only add that
+ * one slug, add its route paths, or edit the single Page-Edit target.
  *
  * PAGE_SCOPE_BASE   commit or ref to diff against (CI sets the PR base SHA)
  * PAGE_SCOPE_BRANCH branch name (CI sets the PR head; local uses git)
@@ -14,7 +15,6 @@ import { reporter } from "./lib/output.mjs"
 
 const PAGE_PREFIX = "src/pages/"
 const COMPONENT_PREFIX = "src/components/pages/"
-const ASSET_PREFIXES = ["public/", "src/assets/"]
 const ROUTES_FILE = "src/config/routes.ts"
 
 export function parseRoutePaths(source) {
@@ -23,19 +23,66 @@ export function parseRoutePaths(source) {
   )
 }
 
+function pageBranchSlug(branch) {
+  const rest = branch.slice("page/".length).replace(/\/+$/, "")
+  if (!rest || rest.includes("/")) return null
+  return rest
+}
+
+function routeMatchesSlug(route, slug) {
+  const base = `/${slug}`
+  return route === base || route.startsWith(`${base}/`)
+}
+
+function isNewFileForSlug(file, slug) {
+  return (
+    file === `${PAGE_PREFIX}${slug}.astro` ||
+    file.startsWith(`${PAGE_PREFIX}${slug}/`) ||
+    file.startsWith(`${COMPONENT_PREFIX}${slug}/`) ||
+    file.startsWith(`public/${slug}/`) ||
+    file.startsWith(`src/assets/${slug}/`)
+  )
+}
+
+function pathOnLine(line) {
+  const match = line.match(/path:\s*["']([^"']+)["']/)
+  return match ? match[1] : null
+}
+
+function withoutAddedSlugPathLines(source, slug, previousPaths) {
+  return source
+    .split("\n")
+    .filter((line) => {
+      const route = pathOnLine(line)
+      if (!route || !routeMatchesSlug(route, slug)) return true
+      return previousPaths.includes(route)
+    })
+    .join("\n")
+}
+
+function sameAsideFromWhitespace(left, right) {
+  return left.replace(/\s+/g, "") === right.replace(/\s+/g, "")
+}
+
 export function findPageScopeViolations({
   branch,
   changes,
   messages,
   routesBefore,
   routesAfter,
+  routesBeforeSource,
+  routesAfterSource,
 }) {
   const violations = []
   const text = messages.join("\n")
   const allowDelete = /^Allow-Page-Delete:/m.test(text)
-  const pageEdits = new Set(
-    [...text.matchAll(/^Page-Edit:\s*(\S+)/gm)].map((match) => match[1]),
-  )
+  const pageEditLines = [...text.matchAll(/^Page-Edit:\s*(\S+)/gm)]
+  const onPageBranch = branch.startsWith("page/")
+  const pageEditTarget = pageEditLines.length === 1 ? pageEditLines[0][1] : null
+  if (onPageBranch && pageEditLines.length > 1) {
+    violations.push("more than one Page-Edit trailer")
+  }
+
   const removedRoutes = routesBefore.filter(
     (route) => !routesAfter.includes(route),
   )
@@ -45,7 +92,33 @@ export function findPageScopeViolations({
     )
   }
 
-  const onPageBranch = branch.startsWith("page/")
+  const slug = onPageBranch ? pageBranchSlug(branch) : null
+  if (onPageBranch && !slug) {
+    violations.push(`branch ${branch} is not a single page slug`)
+  }
+
+  if (slug) {
+    const addedRoutes = routesAfter.filter(
+      (route) => !routesBefore.includes(route),
+    )
+    const outside = addedRoutes.filter(
+      (route) => !routeMatchesSlug(route, slug),
+    )
+    if (outside.length > 0) {
+      violations.push(`added route ${outside.join(", ")} is outside /${slug}`)
+    }
+    if (
+      typeof routesBeforeSource === "string" &&
+      typeof routesAfterSource === "string" &&
+      !sameAsideFromWhitespace(
+        routesBeforeSource,
+        withoutAddedSlugPathLines(routesAfterSource, slug, routesBefore),
+      )
+    ) {
+      violations.push(`changed ${ROUTES_FILE} beyond added path entries`)
+    }
+  }
+
   for (const change of changes) {
     const { status, file } = change
     const deletedPage = status === "D" && file.startsWith(PAGE_PREFIX)
@@ -54,24 +127,20 @@ export function findPageScopeViolations({
       continue
     }
     if (!onPageBranch) continue
-    if (allowedOnPageBranch(change, pageEdits, allowDelete)) continue
+    if (allowedOnPageBranch(change, pageEditTarget, allowDelete, slug)) continue
     violations.push(`${status} ${file} is outside the page/* allowlist`)
   }
   return violations
 }
 
-function allowedOnPageBranch(change, pageEdits, allowDelete) {
+function allowedOnPageBranch(change, pageEditTarget, allowDelete, slug) {
   const { status, file } = change
   if (status === "D") return allowDelete
   if (status === "M" && file === ROUTES_FILE) return true
-  if (status === "M" && file.startsWith(PAGE_PREFIX) && pageEdits.has(file))
+  if (status === "M" && file.startsWith(PAGE_PREFIX) && pageEditTarget === file)
     return true
-  if (status !== "A") return false
-  return (
-    file.startsWith(PAGE_PREFIX) ||
-    file.startsWith(COMPONENT_PREFIX) ||
-    ASSET_PREFIXES.some((prefix) => file.startsWith(prefix))
-  )
+  if (status !== "A" || !slug) return false
+  return isNewFileForSlug(file, slug)
 }
 
 function git(args) {
@@ -125,16 +194,20 @@ function collect(base, branch) {
       ? log.stdout.split("\x1e").filter((part) => part.trim())
       : []
   const before = git(["show", `${base}:${ROUTES_FILE}`])
-  const routesBefore = before.status === 0 ? parseRoutePaths(before.stdout) : []
+  const routesBeforeSource = before.status === 0 ? before.stdout : ""
+  const routesBefore = parseRoutePaths(routesBeforeSource)
   const afterPath = path.join(process.cwd(), ROUTES_FILE)
-  const routesAfter = fs.existsSync(afterPath)
-    ? parseRoutePaths(fs.readFileSync(afterPath, "utf8"))
-    : []
+  const routesAfterSource = fs.existsSync(afterPath)
+    ? fs.readFileSync(afterPath, "utf8")
+    : ""
+  const routesAfter = parseRoutePaths(routesAfterSource)
   return {
     changes,
     messages,
     routesBefore,
     routesAfter,
+    routesBeforeSource,
+    routesAfterSource,
     branch,
   }
 }

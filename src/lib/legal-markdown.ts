@@ -5,7 +5,7 @@ function escapeHtml(value: string): string {
     .replaceAll(">", "&gt;")
 }
 
-/** Subconjunto suficiente para los textos legales del repositorio. */
+/** A sufficient subset for the repository's legal texts. */
 export function renderLegalMarkdown(markdown: string): string {
   return markdown
     .replace(/\r\n/g, "\n")

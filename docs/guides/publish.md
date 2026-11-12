@@ -4,26 +4,28 @@
 
 ## On the machine
 
-With a session already started:
+With a session already started, after `npm ci`:
 
 ```bash
-npx @wix/cli@latest build
-npx @wix/cli@latest release
+npx wix build
+npx wix release
 ```
 
-The first release of a new site can be this one. The workflow takes the next merge.
+These commands use the `wix` binary from the lockfile. The first release of a new site can be this one. The workflow takes the next merge.
 
 The `create-page` skill does not run these commands. It merges to `main`, and the workflow below publishes.
 
 ## In GitHub Actions
 
-The Release workflow runs on a push to `main`, only if `wix.config.json` exists. In the template repository that file is absent and the job is skipped. A skip is not a failure.
+The Release workflow starts from `workflow_run` after the Quality workflow completes. The job runs only when the conclusion is success, the Quality event was `push`, and the head branch is `main`. It checks out that commit. A pull request branch is not published. `workflow_run` starts working only once this workflow file is on `main`.
+
+After checkout, the job checks for `wix.config.json`. In the template repository that file is absent: the job ends successfully and does not log in, build, or release. A missing file means the job does not publish. A skip is not a failure.
 
 In the client repo, the secret is `WIX_API_KEY`: an account API key created for CI. Paste it in Settings → Secrets and variables → Actions. Do not paste it in the code, in chat, or in `.env.local`.
 
 Do not use `WIX_CLIENT_SECRET` for this workflow. That secret authenticates visitors. It does not publish.
 
-If the secret is missing, the job fails with a fixed message and does not print the value. The steps, when the config file exists, are login with the API key, `env pull`, `build`, and `release` with the commit SHA in the comment. The job log is the record of the URL. It does not need to be parsed.
+If the secret is missing, the job fails with a fixed message and does not print the value. The steps, when the config file exists, are login with the API key, `env pull`, `build`, and `release` with the checked-out commit SHA in the comment. Those commands are `npx wix` after `npm ci`. The job log is the record of the URL. It does not need to be parsed.
 
 The Quality workflow does not log in and needs no secrets.
 

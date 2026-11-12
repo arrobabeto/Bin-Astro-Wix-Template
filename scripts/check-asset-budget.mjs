@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Raster > 500 KB o SVG > 200 KB en src/ o public/. */
+/** Raster > 500 KB or SVG > 200 KB in src/ or public/. */
 import fs from "node:fs"
 import path from "node:path"
 
